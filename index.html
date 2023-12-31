@@ -50,6 +50,18 @@
             <p class="lead fw-normal">This is a basic Bootstrap example page that has a Simplicity Embed&trade; web component used in it.
                Go to <a href="https://www.simplicitywebtools.com">www.simplicitywebtools.com</a> to find out more.
             </p>
+            <div>
+              <button type="button" id="btnOpen">Open</button>
+            </div>
+            <div>
+              <button type="button" id="btnClose">Close</button>
+            </div>
+            <div>
+              <button type="button" id="btnSendCommand">Send Command</button>
+            </div>
+            <div>
+              <button type="button" id="btnChangeConfig">Change Config</button>
+            </div>
             <!--<a class="btn btn-outline-secondary" href="#">Coming soon</a>-->
           </div>
           <div class="product-device shadow-sm d-none d-md-block"></div>
@@ -171,9 +183,44 @@
           </div>
         </div>
       </footer>
-    <simplicity-embed setup="http://localhost:5500/config.json" id="sblock" data-icon="heart" data-count="7" data-color="rgb(255,0,0)" data-background="rgb(0,240,240)" data-heading="Rate This Product" />
+    <simplicity-embed setup="http://localhost:5500/config.json" id="simplicity" data-icon="heart" data-count="7" data-color="rgb(255,0,0)" data-background="rgb(0,240,240)" data-heading="Rate This Product" />
 
     <script src="bootstrap.bundle.min.js"></script>
-    <script type="module" src="https://unpkg.com/@simplicitywebtools/simplicity-embed@1.1.8/dist/simplicity-embed/simplicity-embed.esm.js"></script>
+    <script type="module" src="https://unpkg.com/@simplicitywebtools/simplicity-embed@1.1.12/dist/simplicity-embed/simplicity-embed.esm.js"></script>
+    <script>
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+      } else {
+        init();
+      }
+      function init() {
+        const openBtn = document.getElementById("btnOpen");
+        const closeBtn = document.getElementById("btnClose");
+        const sendCommandBtn = document.getElementById("btnSendCommand");
+        const changeConfigBtn = document.getElementById("btnChangeConfig");
+        const seElement = document.getElementById("simplicity");
+        openBtn.addEventListener("click", function() {
+            seElement.open();
+          });
+        closeBtn.addEventListener("click", function() {
+          seElement.close();
+        });
+        sendCommandBtn.addEventListener("click", function() {
+          const sendObj = {
+            "action": "spin"
+          }
+          seElement.sendMessage(sendObj);
+        });
+        changeConfigBtn.addEventListener("click", function() {
+          seElement.setup = "http://localhost:5500/config2.json";
+        });
+        seElement.addEventListener("sbnotify", function(customEvent) {
+          console.log("I received a notify event");
+          console.log(customEvent.detail);
+        })
+      }
+      
+
+    </script>
 </body>
 </html>
